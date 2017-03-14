@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class GithubQuerier {
 
+    private static final String tk = ""; // access_token=ADD_YOUR_TOKEN_HERE
     private static final String BASE_URL = "https://api.github.com/users/";
 
     public static String eventsAsHTML(String user) throws IOException, ParseException {
@@ -33,7 +34,9 @@ public class GithubQuerier {
             SimpleDateFormat outFormat = new SimpleDateFormat("dd MMM, yyyy");
             Date date = inFormat.parse(creationDate);
             String formatted = outFormat.format(date);
-
+            // lets get the commits
+            JSONObject payload = event.getJSONObject("payload");
+            JSONArray commits = payload.getJSONArray("commits");
             // Add type of event as header
             sb.append("<h3 class=\"type\">");
             sb.append(type);
@@ -42,6 +45,19 @@ public class GithubQuerier {
             sb.append(" on ");
             sb.append(formatted);
             sb.append("<br />");
+            // Add commits
+            for (int j = 0; j < commits.length(); j++) {
+                JSONObject commit = commits.getJSONObject(j);
+                sb.append("<div style=\"background:#fffff6; width:80%; border-radius: 10px; border-style:solid; border-width:2px; border-color:#f1f1f1; padding:15px; margin-top:5px; margin-botom:5px; \">");
+                sb.append("<h5 style=\"margin-bottom:0px !important; margin-top:0px!important;\">Commit #" + (j + 1) + "</h5>");
+                sb.append("<b>SHA:</b> " + commit.getString("sha"));
+                sb.append("<br />");
+                sb.append("<b>Message:</b> " + commit.getString("message"));
+                sb.append("<br />");
+                sb.append("<b>URL:</b> " + "<a href =\"" + commit.getString("url") + "\"/>" + commit.getString("url") + "</a>");
+                sb.append("<br />");
+                sb.append("</div>");
+            }
             // Add collapsible JSON textbox (don't worry about this for the homework; it's just a nice CSS thing I like)
             sb.append("<a data-toggle=\"collapse\" href=\"#event-" + i + "\">JSON</a>");
             sb.append("<div id=event-" + i + " class=\"collapse\" style=\"height: auto;\"> <pre>");
@@ -54,13 +70,33 @@ public class GithubQuerier {
 
     private static List<JSONObject> getEvents(String user) throws IOException {
         List<JSONObject> eventList = new ArrayList<JSONObject>();
-        String url = BASE_URL + user + "/events";
-        System.out.println(url);
-        JSONObject json = Util.queryAPI(new URL(url));
-        System.out.println(json);
-        JSONArray events = json.getJSONArray("root");
-        for (int i = 0; i < events.length() && i < 10; i++) {
-            eventList.add(events.getJSONObject(i));
+        int cntr = 1;
+        JSONArray events;
+        JSONArray eventsGlo = new JSONArray();
+        do {
+
+            String url = BASE_URL + user + "/events?page=" + cntr + "&" + tk;
+
+            JSONObject json = Util.queryAPI(new URL(url));
+            System.out.println(json);
+            events = json.getJSONArray("root");
+            if(events.length() != 0) {
+                for(int i = 0; i < events.length(); i++) {
+                    eventsGlo.put(events.get(i));
+                }
+            }
+
+            cntr++;
+        }while(events.length() != 0);
+
+
+        int pushCnt = 0;
+        for (int i = 0; i < eventsGlo.length() && pushCnt < 10 ; i++) {
+            String type = eventsGlo.getJSONObject(i).getString("type");
+            if (type.equals("PushEvent")) {
+                eventList.add(eventsGlo.getJSONObject(i));
+                pushCnt++;
+            }
         }
         return eventList;
     }
