@@ -1,0 +1,29 @@
+Homework4 hot swap
+
+Make sure you have activity and activity2 images
+
+In the hw4-hotswap folder, I edited docker-compose.yml
+
+	- essentially only added a web2 to the file that uses the image activity2
+
+Then go into the nginx-rev directory
+
+	- I added swap1.sh. It has identical commands to swap2.sh, but instead of swapping web1 to web2,
+	    it swaps web2 with web1. Needed so we can swap back and forth.
+
+	- IMPORTANT, make sure you “docker build -t ng .” in this directory, it’s used as the proxy in
+	    docker-compose.yml
+
+After that go back out to where .dorun.sh is , and run the script
+
+	- If done correctly, localhost:8888 should show the original Github Stalker page
+
+To do the hot swaps:
+
+	- via command line, do “docker exec ecs189_proxy_1 /bin/bash /bin/swap2.sh”
+		- This swaps web1 with web2
+		- localhost:8888 should now show the updated Github Stalker page
+
+	- via command line, do “docker exec ecs189_proxy_1 /bin/bash /bin/swap1.sh”
+		- This swaps web2 with web1
+		- localhost:8888 show now show the original Github Stalker page
