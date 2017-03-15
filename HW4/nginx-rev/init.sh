@@ -4,4 +4,4 @@
 cd /etc/nginx
 sed -e s?www.cs.ucdavis.edu?web1:8080/activity/? <nginx.conf > /tmp/xxx
 cp /tmp/xxx nginx.conf
-service nginx reload 
+service nginx reload
