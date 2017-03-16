@@ -12,7 +12,7 @@
 
     #removes the unused container web1 so that only two containers are running at once.
     ID=$(docker ps -aqf "name=web1")
-    docker rm $ID -f
+    docker rm -f $ID
 
     #renames container web2 to web1 so if this script is ever ran again, it can do so without any problems.
     docker rename web2 web1
