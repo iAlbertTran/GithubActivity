@@ -6,32 +6,8 @@ Make sure you have activity and activity2, and ng images
 
 
 In hw4-hotswap folder:
-
-    Edited docker-compose.yml
-        - essentially only added a web2 to the file that uses the image activity2
-
-    Added swap1to2.sh
-        - a script that:
-            - brings up activity2
-            - runs swap2.sh script
-            - kills activity container
-
-    Added swap2to1.sh
-        - a script that:
-            - brings up activity1
-            - runs swap1.sh script
-            - kills activity2 container
-
-
-In nginx-rev directory:
-
-	Added swap1.sh.
-	    - It has identical commands to swap2.sh, but instead of swapping web1 to web2, it swaps
-	    web2 with web1. Needed so we can swap back and forth.
-
-	- IMPORTANT, make sure you “docker build -t ng .” in this directory, it’s used as the proxy in
-	docker-compose.yml
-
+    Edited dorun.sh
+        - Added a command at the end to rename ecs189_web1_1 to web1
 
 
 After that go back out and run ./dorun.sh,
@@ -41,33 +17,15 @@ After that go back out and run ./dorun.sh,
 
 For automatic hotswaps, via commandline:
 
-    - ./swap1to2.sh
-        - for swapping web1 to web2
-        - localhost:8888 should now show the updated Github Stalker page
-    - ./swap2to1.sh
-        - for swapping web2 to web1
-        - localhost:8888 show now show the original Github Stalker page
+    - ./doswap.sh IMAGE_NAME
+    - a script that takes in the new image to be swapped to as an argument.
 
 
-For manual hotswaps:
+For manual hotswaps, via commandline:
+    1) docker run -d -P --name web2 --link ecs189_proxy_1 --net ecs189_default IMAGE_NAME
+    2) docker exec ecs189_proxy_1 /bin/bash /bin/swap2.sh
+    3) docker ps -a
+    4) docker rm -f CONTAINER_ID
+    5) docker rename web2 web1
 
-	- For hotswap web1 to web2: via command line, do:
-	    1) docker exec ecs189_proxy_1 /bin/bash /bin/swap2.sh
-	        - swaps web1 with web2
-	    2) docker ps -a
-	        - find the container ID of activity
-	    3) docker rm CONTAINER_ID -f
-	        - remove activity
-		- This swaps web1 with web2
-		- localhost:8888 should now show the updated Github Stalker page
-
-	- For hotswap web2 to web1: via command line, do:
-	    1) docker exec ecs189_proxy_1 /bin/bash /bin/swap1.sh
-	        - swaps web2 with web1
-	    2) docker ps -a
-	        - find the container ID of activity2
-	    3) docker rm CONTAINER_ID -f
-	        - remove activity2
-		- This swaps web2 with web1
-		- localhost:8888 show now show the original Github Stalker page
 
