@@ -5,7 +5,7 @@ Make sure you have activity and activity2, and ng images
 
 
 
-In hw4-hotswap folder:
+In HW4 folder:
     Edited dorun.sh
         - Added a command at the end to rename ecs189_web1_1 to web1
 
