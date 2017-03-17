@@ -23,7 +23,7 @@ For automatic hotswaps, via commandline:
 
 
 For manual hotswaps, via commandline:
-    1) docker run -d -P --name web2 --link ecs189_proxy_1 --net ecs189_default IMAGE_NAME
+    1) docker run -d -P --name web2 --net ecs189_default IMAGE_NAME
     2) docker exec ecs189_proxy_1 /bin/bash /bin/swap2.sh
     3) docker ps -a
     4) docker rm -f CONTAINER_ID
