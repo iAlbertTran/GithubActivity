@@ -1,13 +1,14 @@
 Homework4 hot swap
 
-
-Make sure you have activity and activity2, and ng images
-
-
-
 In HW4 folder:
     Edited dorun.sh
         - Added a command at the end to rename ecs189_web1_1 to web1
+
+    Added doswap.sh
+        - A script that automatically does the hot swapping
+
+    Edited dockerfile in nginx-rev
+        - Removed lines 36-37, additional swap scripts aren't required to do the hotswaps back and forth.
 
 
 After that go back out and run ./dorun.sh,

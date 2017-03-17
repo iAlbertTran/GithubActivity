@@ -3,7 +3,7 @@
 
     #Brings up web2, which is the new activity image to be swapped in place of the old one.
     #It is passed as an argument into the script, and inserted where "$1" is at the end
-    docker run -d -P --name web2 --link ecs189_proxy_1 --net ecs189_default $1
+    docker run -d -P --name web2 --net ecs189_default $1
 
 
     #runs the swap script to swap from web1 to web2
