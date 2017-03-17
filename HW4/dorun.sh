@@ -31,5 +31,5 @@ sleep 10 && docker exec ecs189_proxy_1 /bin/bash /bin/init.sh
 echo "redirecting to the service"
 echo "...nginx restarted, should be ready to go!"
 
-docker rename ecs189_web1_1 web1
+sleep 10 && docker rename ecs189_web1_1 web1
 
