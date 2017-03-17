@@ -16,7 +16,8 @@
   </head>
   <body>
   <div id="core">
-    <h2>What Have I Been Up To?</h2>
+    <img src="github-logo.png" width="750px" />
+    <h2>Stalk Your Prey</h2>
     <form action="index.jsp" method="GET">
       <div class="form-group">
         <label for="user"><h3>Github username:</h3></label>
@@ -39,7 +40,7 @@
       <%if (user != null && !user.isEmpty()){%>
           <%=GithubQuerier.eventsAsHTML(user)%>
         <% } else { %>
-            Tell me who you are, and I will tell you what you did last ... week? Month? Summer? Not sure yet.
+            Enter Username To Stalk Their 10 Last PushEvents
         <% }%>
     </div>
   </div>
